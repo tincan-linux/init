@@ -22,9 +22,11 @@ startup() {
     mount -t sysfs sys /sys -o nosuid,noexec,nodev
     mount -t tmpfs run /run -o mode=0755,nosuid,nodev
     mount -t devtmpfs dev /dev -o mode=0755,nosuid
-    mkdir -p /dev/pts /dev/shm
+    
+    mkdir -p /run/user /run/lock /run/log /run/runit /dev/pts /dev/shm
+    
     mount -t devpts devpts /dev/pts -o mode=0620,gid=5,nosuid,noexec
-    mount -t devpts devpts /dev/pts -o mode=0620,gid=5,nosuid,noexec
+    mount -t tmpfs shm /dev/shm -o mode=1777,nosuid,nodev
 
     # Initialize devices
     log 3 "Setting up loopback device..."
@@ -51,15 +53,15 @@ startup() {
     swapon -a || panic
 
     # Kill device manager so that it can be started by runit
-    log 3 "Killing device manager..."
+    log 3 "Starting services..."
+
     {
         kill $pid_mdev
         command -v mdev > /proc/sys/kernel/hotplug
     } 2> /dev/null
 
     # Start service manager (busybox runit)
-    log 3 "Starting services..."
-    exec runsvdir -P "$SV_DIR" &
+    setsid runsvdir -P "$SV_DIR" > /run/log/runsv 2>&1
 
     # Calculate boot time
     IFS=. read -r boot_time _ < /proc/uptime
@@ -68,15 +70,16 @@ startup() {
 
 shutdown() {
     # Stop all running services
+    log 3 "\n"
     log 3 "Stopping services..."
     sv force-shutdown /var/service/* > /dev/null 2>&1
 
     # Kill running processes
     log 3 "Sending TERM signal to all processes..."
     kill -s TERM -1
-    log 3 "Sending KILL signal to all processes..."
     sleep 2
-    kiss -s KILL -1
+    log 3 "Sending KILL signal to all processes..."
+    kill -s KILL -1
 
     # Unmount filesystems
     log 3 "Unmounting all filesystems..."
