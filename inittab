@@ -1,0 +1,12 @@
+# Startup and shutdown routines
+::sysinit:/bin/rc startup
+::restart:/sbin/init
+::shutdown:/bin/rc shutdown
+::respawn:runsvdir -P /var/service
+
+# Spawn some TTYs
+tty1::respawn:/bin/getty 38400 tty1
+tty2::respawn:/bin/getty 38400 tty2
+tty3::respawn:/bin/getty 38400 tty3
+tty4::respawn:/bin/getty 38400 tty4
+tty5::respawn:/bin/getty 38400 tty5

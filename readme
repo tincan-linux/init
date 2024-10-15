@@ -1,0 +1,20 @@
+|---------------------------------|
+| Tin Can Linux                   |   _____ _           ___            
+|---------------------------------|  /__   (_)_ __     / __\__ _ _ __  
+| A tiny Linux distro made from   |    / /\/ | '_ \   / /  / _` | '_ \ 
+| scraps I found on the internet. |   / /  | | | | | / /__| (_| | | | |
+|---------------------------------|   \/   |_|_| |_| \____/\__,_|_| |_|
+=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
+
+This is a tiny init script designed for use with busybox init, inspired by
+minirc (https://github.com/hut/minirc).
+
+=== Installing
+==============
+
+Run 'make'.
+
+=== Contributing
+================
+
+Issues and pull requests are welcome.
