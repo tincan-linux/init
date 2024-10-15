@@ -2,7 +2,6 @@
 ::sysinit:/bin/rc startup
 ::restart:/sbin/init
 ::shutdown:/bin/rc shutdown
-::respawn:runsvdir -P /var/service
 
 # Spawn some TTYs
 tty1::respawn:/bin/getty 38400 tty1

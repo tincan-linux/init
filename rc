@@ -57,6 +57,10 @@ startup() {
         command -v mdev > /proc/sys/kernel/hotplug
     } 2> /dev/null
 
+    # Start service manager (busybox runit)
+    log 3 "Starting services..."
+    exec runsvdir -P "$SV_DIR" &
+
     # Calculate boot time
     IFS=. read -r boot_time _ < /proc/uptime
     log 2 "Boot completed in $boot_time seconds."
