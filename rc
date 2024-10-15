@@ -53,15 +53,13 @@ startup() {
     swapon -a || panic
 
     # Kill device manager so that it can be started by runit
+    # Services are started by inittab after this script exits
     log 3 "Starting services..."
 
     {
         kill $pid_mdev
         command -v mdev > /proc/sys/kernel/hotplug
     } 2> /dev/null
-
-    # Start service manager (busybox runit)
-    setsid runsvdir -P "$SV_DIR" > /run/log/runsv 2>&1
 
     # Calculate boot time
     IFS=. read -r boot_time _ < /proc/uptime
@@ -70,7 +68,8 @@ startup() {
 
 shutdown() {
     # Stop all running services
-    log 3 "\n"
+    log 3 ""
+    log 3 ""
     log 3 "Stopping services..."
     sv force-shutdown /var/service/* > /dev/null 2>&1
 
@@ -87,6 +86,8 @@ shutdown() {
     umount -rat nosysfs,proc,devtmpfs,tmpfs
     mount -o remount,ro /
     sync
+
+    log 1 "Shutting down."
 }
 
 case $1 in
