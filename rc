@@ -38,6 +38,8 @@ startup() {
     # Set console font
     [ -z "$FONT" ] || loadfont < "/usr/share/consolefonts/$FONT"
 
+    clear
+
     log 5 '   _____ _           ___'
     log 5 '  /__   (_)_ __     / __\__ _ _ __'
     log 5 '    / /\/ | '\''_ \   / /  / _` | '\''_ \'
